@@ -1,0 +1,19 @@
+<h2>📜 FIR Records on Blockchain</h2>
+<table border="1">
+  <tr>
+    <th>#</th>
+    <th>Name</th>
+    <th>Description</th>
+    <th>IPFS</th>
+    <th>Timestamp</th>
+  </tr>
+  {% for fir in firs %}
+  <tr>
+    <td>{{ forloop.counter0 }}</td>
+    <td>{{ fir.name }}</td>
+    <td>{{ fir.description }}</td>
+    <td>{{ fir.ipfs }}</td>
+    <td>{{ fir.timestamp }}</td>
+  </tr>
+  {% endfor %}
+</table>
