@@ -9,6 +9,14 @@ from .models import Post , Lawyer  # Make sure this is your actual model
 from django.utils import timezone
 from django.db.models import Q
 
+import json
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from . import chat_utils
+
+
+
 # Connect to local blockchain (Hardhat network)
 w3 = Web3(Web3.HTTPProvider("http://127.0.0.1:8545"))  # Change if needed
 
@@ -56,6 +64,52 @@ def support_forum(request):
 
 def new_post(request):
     return render( request , 'fir/template/new_post.html')
+
+
+# Store chat sessions
+chat_sessions = {}
+
+
+def chatbot(request):
+    # Initialize a new session if needed
+    session_id = request.session.session_key
+    if not session_id:
+        request.session.create()
+        session_id = request.session.session_key
+    
+    # Create a new chat session if one doesn't exist
+    if session_id not in chat_sessions:
+        chat_sessions[session_id] = chat_utils.initialize_chat()
+    
+    return render(request, 'fir/template/chatbot.html')
+
+
+@csrf_exempt
+def get_chatbot_response(request):
+    if request.method == 'POST':
+        try:
+            # Get the user message from the request
+            data = json.loads(request.body)
+            user_message = data.get('message', '')
+            
+            # Get or create chat session
+            session_id = request.session.session_key
+            if not session_id:
+                request.session.create()
+                session_id = request.session.session_key
+            
+            if session_id not in chat_sessions:
+                chat_sessions[session_id] = chat_utils.initialize_chat()
+            
+            # Get response from the chatbot
+            response = chat_utils.get_response(chat_sessions[session_id], user_message)
+            
+            return JsonResponse({'response': response})
+        
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    
+    return JsonResponse({'error': 'Invalid request method'}, status=400)    
 
 # View to handle form submission
 def submit_fir(request):

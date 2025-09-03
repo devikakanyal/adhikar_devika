@@ -52,6 +52,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',   #added for deployment
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -120,12 +121,15 @@ USE_I18N = True
 
 USE_TZ = True
 
+#for deployment -dev
+ALLOWED_HOSTS = ["*"]
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS= [ BASE_DIR , 'static']
+STATICFILES_DIRS = [BASE_DIR / "fir" / "static"]
 
 
 

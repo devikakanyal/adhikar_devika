@@ -12,6 +12,8 @@ urlpatterns = [
     path('suppport_forum/' , views.support_forum , name='support_forum'),
     path('new_post/' , views.new_post , name='new_post'),
     path('find_help/' , views.find_help , name='find_help'),
+    path('chatbot/' , views.chatbot , name='chatbot'),
+    path('get_response/', views.get_chatbot_response, name='get_response'),
 
 
 
